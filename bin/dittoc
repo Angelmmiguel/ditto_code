@@ -3,5 +3,5 @@
 require 'ditto_code'
 
 # Initiate ditto
-ditto = DittoCode.new(ARGV[0])
+ditto = DittoCode::Parse.new(ARGV[0])
 ditto.transform(ARGV[1])

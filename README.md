@@ -1,4 +1,4 @@
-Ditto
+DittoCode
 =====
 
-Transform your ruby code based on a custom variable
+Transform and execute your ruby code based on a custom variable

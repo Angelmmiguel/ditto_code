@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.description = "Transform your ruby code based on a custom variable."
   s.authors     = ["Angel M Miguel"]
   s.email       = 'angel@laux.es'
-  s.files       = ["lib/ditto_code.rb"]
+  s.files       = Dir['lib/**/*.rb','bin/*']
   s.homepage    =
-    'http://rubygems.org/gems/ditto_code'
+    'https://github.com/Angelmmiguel/ditto_code'
   s.license       = 'MIT'
 end
