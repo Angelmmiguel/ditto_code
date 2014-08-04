@@ -123,7 +123,7 @@ module DittoCode
 
       # Send the line into the file. If indent is true
       # The line will be indented
-      def check_with_indent(file, line)
+      def check_with_indent(out_file, line)
         if @indent
           out_file.puts(line.indent(-1))
         else
