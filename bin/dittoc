@@ -7,7 +7,7 @@ require 'ditto_code'
 
 def usage(s)
     $stderr.puts("Ditto say -> [Err] " + s)
-    $stderr.puts("Ditto say -> [Usage] #{File.basename($0)}: [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] ENVIRONMENT file|folder")
+    $stderr.puts("Ditto say -> [Usage] #{File.basename($0)}: [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] [--allow-views <search in views>] ENVIRONMENT file|folder")
     exit(1)
 end
 
@@ -37,8 +37,14 @@ def iterateFolder(folder)
 
   		filepath = "#{folder}#{rb_file}"
 
-  		if isFile?(filepath) && rb_file.end_with?('.rb')
-  			@ditto.transformation(filepath)
+  		if isFile?(filepath) 
+
+  			if rb_file.end_with?('.rb')
+  				@ditto.transformation(filepath, false)
+  			elsif rb_file.end_with?('.erb') && @allow_views
+  				@ditto.transformation(filepath, true)
+  			end
+  			
   		elsif isDirectory?(filepath) && @recursive
   			# Recursive
   			iterateFolder("#{filepath}/")
@@ -57,6 +63,7 @@ $environment = "";
 $verbose = false;
 $override = false;
 @recursive = false
+@allow_views = false
 
 # ===============================================================
 # INITIATION
@@ -76,6 +83,9 @@ while ARGV[0]
 	    when '-r' 
 	    	ARGV.shift
 	    	@recursive = true
+	     when '--allow-views' 
+	    	ARGV.shift
+	    	@allow_views = true	
 	    when /^-/ 
 	    	usage("Unknown option: #{ARGV[0].inspect}"); 
 	    else 

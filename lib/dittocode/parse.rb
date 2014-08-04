@@ -16,7 +16,7 @@ module DittoCode
     end
 
     # Transform the file based in the environment
-    def transformation(file_path)
+    def transformation(file_path, @isView)
 
       # Start to read the file
       file = File.open(file_path)
@@ -37,7 +37,11 @@ module DittoCode
         # Each line........
         text.each_line do | line |
 
-          m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"] do/.match(line)
+          if @isView
+            m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"][\s]+do[\s]*%>/.match(line)
+          else
+            m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"] do/.match(line)
+          end
 
           if m 
             actions[:env] = m[:environment]
@@ -113,10 +117,14 @@ module DittoCode
       # Detect if we need to add a new end
       def moreEnds?(line)
 
-        # Get the initializers of blocks
-        initializers = line.scan(/^(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)$/).size
-        # Get the ends blocks
-        finals = line.scan(/[\s]+(end)[\s]+/).size + line.scan(/^(end)[\s]+/).size + line.scan(/[\s]+(end)$/).size
+        # Get the initializers and the ends of the blocks
+        if @isView
+          initializers = line.scan(/<%[\s]*(if|do|def)[\s]+/).size + line.scan(/<%[@=;\s\w\d]*(if|do|def)[\s]+/).size
+          finals = line.scan(/[\s]+(end)[\s]*%>/).size + line.scan(/<%[\s]*(end)[\s]*%>/).size
+        else
+          initializers = line.scan(/^(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)$/).size
+          finals = line.scan(/[\s]+(end)[\s]+/).size + line.scan(/^(end)[\s]+/).size + line.scan(/[\s]+(end)$/).size
+        end
 
         # Return the difference
         initializers - finals
