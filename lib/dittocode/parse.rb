@@ -21,7 +21,11 @@ module DittoCode
 
       # Start to read the file
       file = File.open(file_path)
-      @file_name = File.basename(file_path, ".rb") 
+      if isView 
+        @file_name = File.basename(file_path, ".erb") 
+      else
+        @file_name = File.basename(file_path, ".rb")
+      end
       @dir_name = File.dirname(file_path) + "/"
       @isView = isView
 
@@ -56,6 +60,7 @@ module DittoCode
               else  
                 out_file.puts(line)
               end
+
             else 
               # He is transforming
               dittos += 1
@@ -119,11 +124,13 @@ module DittoCode
       def isEnd?(line)
 
         # Coincide with an end!
-        if /^[\s]*end/.match(line)
-          return true
+        if @isView && /[\s]+(end)[\s]*%>/.match(line)
+          true
+        elsif /^[\s]*end/.match(line)
+          true
+        else
+          false 
         end
-
-        return false
       end
 
       # Detect if we need to add a new end
@@ -132,7 +139,7 @@ module DittoCode
         # Get the initializers and the ends of the blocks
         if @isView
           initializers = line.scan(/<%[\s]*(if|do|def)[\s]+/).size + line.scan(/<%[@=;\s\w\d]*(if|do|def)[\s]+/).size
-          finals = line.scan(/[\s]+(end)[\s]*%>/).size + line.scan(/<%[\s]*(end)[\s]*%>/).size
+          finals = line.scan(/[\s]+(end)[\s]*%>/).size
         else
           initializers = line.scan(/^(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)$/).size
           finals = line.scan(/[\s]+(end)[\s]+/).size + line.scan(/^(end)[\s]+/).size + line.scan(/[\s]+(end)$/).size
@@ -147,9 +154,17 @@ module DittoCode
       def initiateFile(file_path)
 
         if(@override)
-          File.new("#{@dir_name}#{@file_name}_tmp.rb", "w")
+          if @isView 
+            File.new("#{@dir_name}#{@file_name}_tmp.erb", "w")
+          else
+            File.new("#{@dir_name}#{@file_name}_tmp.rb", "w")
+          end
         else
-          File.new("#{@dir_name}#{@file_name}_#{@env}.rb", "w")
+          if @isView 
+            File.new("#{@dir_name}#{@file_name}_#{@env}.erb", "w")
+          else
+            File.new("#{@dir_name}#{@file_name}_#{@env}.rb", "w")
+          end
         end
 
       end
@@ -165,8 +180,13 @@ module DittoCode
         file.close;
 
         if(@override)
-          File.delete("#{@dir_name}#{@file_name}.rb")
-          File.rename(file, "#{@dir_name}#{@file_name}.rb")
+          if @isView 
+            File.delete("#{@dir_name}#{@file_name}.erb")
+            File.rename(file, "#{@dir_name}#{@file_name}.erb")
+          else
+            File.delete("#{@dir_name}#{@file_name}.rb")
+            File.rename(file, "#{@dir_name}#{@file_name}.rb")
+          end
         end
 
       end
