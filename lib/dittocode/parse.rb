@@ -10,18 +10,20 @@ module DittoCode
     end
 
     # Initialize the environment
-    def initialize(environment, override)
+    def initialize(environment, override, verbose)
       @env = environment;
       @override = override;
+      @verbose = verbose
     end
 
     # Transform the file based in the environment
-    def transformation(file_path, @isView)
+    def transformation(file_path, isView)
 
       # Start to read the file
       file = File.open(file_path)
       @file_name = File.basename(file_path, ".rb") 
       @dir_name = File.dirname(file_path) + "/"
+      @isView = isView
 
       # Generate the new archive
       out_file = initiateFile(file_path)
@@ -32,10 +34,8 @@ module DittoCode
       # Get the text
       # Protect against nil or directory when it's a file
       begin
-        text = file.read
-
         # Each line........
-        text.each_line do | line |
+        file.each_line do | line |
 
           if @isView
             m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"][\s]+do[\s]*%>/.match(line)
@@ -50,7 +50,12 @@ module DittoCode
           else
 
             if !actions[:atack] 
-              out_file.puts(line)
+              if file.eof?
+                # Don't print a \n in the last line
+                out_file.print(line)
+              else  
+                out_file.puts(line)
+              end
             else 
               # He is transforming
               dittos += 1
@@ -87,7 +92,10 @@ module DittoCode
 
         end
 
-        say "[Ok] #{dittos} lines ditted on #{@dir_name}#{@file_name}!"
+        if @verbose || dittos != 0
+          say "[Ok] #{dittos} lines ditted on #{@dir_name}#{@file_name}!"
+        end
+
         closeFile(out_file)
       
       rescue => e
@@ -96,6 +104,10 @@ module DittoCode
           say "[Err] If you wants to use a directory use the option -f"
         else 
           say "[Err] Oh no! I have an error :("  
+        end
+
+        if @verbose
+          say e
         end
 
       end 
@@ -153,7 +165,7 @@ module DittoCode
         file.close;
 
         if(@override)
-          File.delete(file)
+          File.delete("#{@dir_name}#{@file_name}.rb")
           File.rename(file, "#{@dir_name}#{@file_name}.rb")
         end
 

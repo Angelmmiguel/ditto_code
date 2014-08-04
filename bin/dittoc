@@ -76,7 +76,7 @@ while ARGV[0]
 	    	$isFolder = true
 	    when '-v' 
 	    	ARGV.shift 
-	    	$verbose = ARGV.shift
+	    	$verbose = true
 	    when '-o' 
 	    	ARGV.shift
 	    	$override = true
@@ -104,7 +104,7 @@ end
 # ===============================================================
 
 # Initiate ditto
-@ditto = DittoCode::Parse.new($environment, $override)
+@ditto = DittoCode::Parse.new($environment, $override, $verbose)
 
 # Check if the user has introduce a folder/file
 if $folder.empty?
@@ -121,7 +121,11 @@ else
 		iterateFolder($folder)
 	else
 		# Only a file
-		ditto.transformation($folder)
+		if $folder.end_with?('.rb')
+  			@ditto.transformation($folder, false)
+  		elsif $folder.end_with?('.erb') && @allow_views
+  			@ditto.transformation($folder, true)
+  		end
 	end
 
 end
