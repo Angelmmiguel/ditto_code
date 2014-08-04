@@ -10,10 +10,11 @@ module DittoCode
     end
 
     # Initialize the environment
-    def initialize(environment, override, verbose)
-      @env = environment;
-      @override = override;
+    def initialize(environment, override, verbose, indent)
+      @env = environment
+      @override = override
       @verbose = verbose
+      @indent = indent
     end
 
     # Transform the file based in the environment
@@ -73,7 +74,7 @@ module DittoCode
                   actions[:atack] = false
                 elsif actions[:env] == @env
                   # Only how if we must mantain it
-                  out_file.puts(line.indent(-1))
+                  check_with_indent(out_file, line)
                 end
 
                 actions[:ends] -= 1
@@ -82,7 +83,7 @@ module DittoCode
 
                 # prints of coincide with the environment
                 if actions[:env] == @env
-                  out_file.puts(line.indent(-1))
+                  check_with_indent(out_file, line)
                 end
 
                 # Check if we need to add a new end
@@ -119,6 +120,16 @@ module DittoCode
     end
 
     private
+
+      # Send the line into the file. If indent is true
+      # The line will be indented
+      def check_with_indent(file, line)
+        if @indent
+          out_file.puts(line.indent(-1))
+        else
+          out_file.puts(line)
+        end
+      end 
 
       # Detect an end line
       def isEnd?(line)

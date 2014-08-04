@@ -7,7 +7,7 @@ require 'ditto_code'
 
 def usage(s)
     $stderr.puts("Ditto say -> [Err] " + s)
-    $stderr.puts("Ditto say -> [Usage] #{File.basename($0)}: [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] [--allow-views <search in views>] ENVIRONMENT file|folder")
+    $stderr.puts("Ditto say -> [Usage] #{File.basename($0)}: [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] [--allow-views <search in views>] [-i <indent>] ENVIRONMENT file|folder")
     exit(1)
 end
 
@@ -64,6 +64,7 @@ $verbose = false;
 $override = false;
 @recursive = false
 @allow_views = false
+$indent = false
 
 # ===============================================================
 # INITIATION
@@ -83,7 +84,10 @@ while ARGV[0]
 	    when '-r' 
 	    	ARGV.shift
 	    	@recursive = true
-	     when '--allow-views' 
+	    when '-i' 
+	    	ARGV.shift
+	    	$indent = true
+	    when '--allow-views' 
 	    	ARGV.shift
 	    	@allow_views = true	
 	    when /^-/ 
@@ -104,7 +108,7 @@ end
 # ===============================================================
 
 # Initiate ditto
-@ditto = DittoCode::Parse.new($environment, $override, $verbose)
+@ditto = DittoCode::Parse.new($environment, $override, $verbose, $indent)
 
 # Check if the user has introduce a folder/file
 if $folder.empty?
