@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'ditto_code'
-  s.version     = '0.0.1'
+  s.version     = '0.1.0'
   s.date        = '2014-07-31'
   s.executables << 'dittoc'
   s.summary     = "ditto"
@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/Angelmmiguel/ditto_code'
   s.license       = 'MIT'
+  s.add_runtime_dependency "indentation", ["= 0.1.1"]
 end

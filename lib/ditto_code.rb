@@ -1,6 +1,8 @@
 require 'dittocode/parse'
 require 'dittocode/exec'
+require 'dittocode/talk'
 include DittoCode::Exec
+include DittoCode::Talk
 
 module DittoCode
   def self.symbolize_keys h
