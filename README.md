@@ -20,7 +20,7 @@ It's simple, with DittoCode you will be able to create a blocks that will be exe
 
 	end
 
-These blocks are for development. When you turn to production, execute call to Ditto to atack!. In a terminal:
+These blocks are for development. When you turn to production, call to Ditto to atack!. In a terminal:
 
 	dittoc PREMIUM my_file.rb
 
