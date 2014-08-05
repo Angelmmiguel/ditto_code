@@ -1,6 +1,6 @@
 # DittoCode
 
-![DittCode](https://github.com/Angelmmiguel/ditto_code/ditto.png "DittoCode")
+![DittCode](https://raw.githubusercontent.com/Angelmmiguel/ditto_code/master/ditto.png "DittoCode")
 
 DittoCode helps you to transform and execute your ruby code based on a custom variable. This gem is composed by a "execute" block to development your app, and a parser who rewrite your code ready to production.
 
