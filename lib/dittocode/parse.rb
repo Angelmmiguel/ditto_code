@@ -149,10 +149,10 @@ module DittoCode
 
         # Get the initializers and the ends of the blocks
         if @isView
-          initializers = line.scan(/<%[\s]*(if|do|def)[\s]+/).size + line.scan(/<%[@=;\s\w\d]*(if|do|def)[\s]+/).size
+          initializers = line.scan(/<%[\s]*(case|unless|if|do|def)[\s]+/).size + line.scan(/<%[@=;\s\w\d]*(case|unless|if|do|def)[\s]+/).size
           finals = line.scan(/[\s]+(end)[\s]*%>/).size
         else
-          initializers = line.scan(/^(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)[\s]+/).size + line.scan(/[\s]+(if|do|def)$/).size
+          initializers = line.scan(/^(case|unless|if|do|def)[\s]+/).size + line.scan(/[\s]+(case|unless|if|do|def)[\s]+/).size + line.scan(/[\s]+(case|unless|if|do|def)$/).size
           finals = line.scan(/[\s]+(end)[\s]+/).size + line.scan(/^(end)[\s]+/).size + line.scan(/[\s]+(end)$/).size
         end
 
