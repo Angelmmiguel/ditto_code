@@ -42,54 +42,59 @@ module DittoCode
         # Each line........
         file.each_line do | line |
 
-          if @isView
-            m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"][\s]+do[\s]*%>/.match(line)
-          else
-            m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"] do/.match(line)
-          end
+          # Ignore the line require ditto_code to delete it on final releases
+          if /[\s]*require[\s]*['|"](ditto_code)['|"]/.match(line).nil?
 
-          if m 
-            actions[:env] = m[:environment]
-            actions[:atack] = true;
-            actions[:ends] = 1;
-          else
+            if @isView
+              m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"][\s]+do[\s]*%>/.match(line)
+            else
+              m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"] do/.match(line)
+            end
 
-            if !actions[:atack] 
-              if file.eof?
-                # Don't print a \n in the last line
-                out_file.print(line)
-              else  
-                out_file.puts(line)
-              end
+            if m 
+              actions[:env] = m[:environment]
+              actions[:atack] = true;
+              actions[:ends] = 1;
+            else
 
-            else 
-              # He is transforming
-              dittos += 1
-
-              # Check if the line is end
-              if isEnd? line
-
-                # If is the last end, it's coincide with the end of the block
-                if actions[:ends] == 1
-                  actions[:atack] = false
-                elsif actions[:env] == @env
-                  # Only how if we must mantain it
-                  check_with_indent(out_file, line)
+              if !actions[:atack] 
+                if file.eof?
+                  # Don't print a \n in the last line
+                  out_file.print(line)
+                else  
+                  out_file.puts(line)
                 end
 
-                actions[:ends] -= 1
+              else 
+                # He is transforming
+                dittos += 1
 
-              else
+                # Check if the line is end
+                if isEnd? line
 
-                # prints of coincide with the environment
-                if actions[:env] == @env
-                  check_with_indent(out_file, line)
+                  # If is the last end, it's coincide with the end of the block
+                  if actions[:ends] == 1
+                    actions[:atack] = false
+                  elsif actions[:env] == @env
+                    # Only how if we must mantain it
+                    check_with_indent(out_file, line)
+                  end
+
+                  actions[:ends] -= 1
+
+                else
+
+                  # prints of coincide with the environment
+                  if actions[:env] == @env
+                    check_with_indent(out_file, line)
+                  end
+
+                  # Check if we need to add a new end
+                  new_ends = moreEnds? line
+                  actions[:ends] += new_ends
+                  dittos += new_ends
                 end
 
-                # Check if we need to add a new end
-                new_ends = moreEnds? line
-                actions[:ends] += new_ends
-                dittos += new_ends
               end
 
             end
@@ -149,11 +154,17 @@ module DittoCode
 
         # Get the initializers and the ends of the blocks
         if @isView
-          initializers = line.scan(/<%[\s]*(case|unless|if|do|def)[\s]+/).size + line.scan(/<%[@=;\s\w\d]*(case|unless|if|do|def)[\s]+/).size
+          initializers = line.scan(/<%[\s]*(case|unless|if|do|def)[\s]+/).size 
+          initializers += line.scan(/<%[@=;\s\w\d]*(case|unless|if|do|def)[\s]+/).size
+          
           finals = line.scan(/[\s]+(end)[\s]*%>/).size
         else
-          initializers = line.scan(/^(case|unless|if|do|def)[\s]+/).size + line.scan(/[\s]+(case|unless|if|do|def)[\s]+/).size + line.scan(/[\s]+(case|unless|if|do|def)$/).size
-          finals = line.scan(/[\s]+(end)[\s]+/).size + line.scan(/^(end)[\s]+/).size + line.scan(/[\s]+(end)$/).size
+          initializers = line.scan(/^[\s\t]*(case|unless|if|do|def)[\s]+/).size                     # If, def, unless... of a start line
+          initializers += line.scan(/[\s\t]+(case|do)[\s]+[|]+/).size                               # Case or do inside a line
+          initializers += line.scan(/[\s\t]+(do)[\s]*$/).size                                       # Finals do
+          initializers += line.scan(/[\s\t]+(if|unless)[\s]+[@=\d\w\s]+(?:then){1}/).size           # Only if|unless + then, this line disable error by: unless|if var
+
+          finals = line.scan(/[\s\t]*(end)[\s]*$/).size
         end
 
         # Return the difference
