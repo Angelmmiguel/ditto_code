@@ -6,11 +6,6 @@ module DittoCode
     require 'rainbow'
     require 'rainbow/ext/string'
 
-  	# Say hello ditto
-    def self.hi
-      say "Hi man! What's up?"
-    end
-
     # Initialize the environment
     def initialize(environment, override, verbose, indent)
       @env = environment
@@ -106,7 +101,7 @@ module DittoCode
         end
 
         if @verbose || dittos != 0
-          say "#{dittos} lines ditted on #{@dir_name}#{@file_name}!                     [ "+"OK".color("64d67f")+" ]"
+          say "[ "+"OK".color("64d67f")+" ] #{dittos} lines ditted on #{@dir_name}#{@file_name}!"
         end
 
         closeFile(out_file)
@@ -114,9 +109,9 @@ module DittoCode
       rescue => e
 
         if e.class == Errno::EISDIR
-          say "[Err] If you wants to use a directory use the option -f                 [ "+"ERR".color("ed5757")+" ]"
+          say "[ "+"ERR".color("ed5757")+" ] If you wants to use a directory use the option -f"
         else 
-          say "[Err] Oh no! I have an error :(                                         [ "+"ERR".color("ed5757")+" ]"  
+          say "[ "+"ERR".color("ed5757")+" ] Oh no! I have an error :("  
         end
 
         if @verbose
