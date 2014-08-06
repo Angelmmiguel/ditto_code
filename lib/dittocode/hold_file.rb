@@ -3,14 +3,14 @@ module DittoCode
 	@initialize = false
 
 	module HoldFile
-		def if (environment)
+		def self.if (environment)
 
 			# check the env code
 			unless @initialize
 				DittoCode::Environments.check_env
 			end
 
-			unless environment.split(",").include? ENV["DITTOCODE_ENV"]
+			unless DittoCode::Environments.isIncluded? environment
 				exit
 			end 
 		end
