@@ -72,9 +72,13 @@ To iterate inside a folder use -f option:
 
     dittoc -f PREMIUM ./
     
-To iterate recursively inside a folder use -f option:
+To iterate recursively inside a folder use -r option:
 
     dittoc -f -r PREMIUM ./
+
+By default, dittoc ignore the .erb files. If you need to parse it use the option --allow-views:
+
+	dittoc -f -r --allow-views PREMIUM ./
     
 ## Contributions
 
