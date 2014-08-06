@@ -28,6 +28,14 @@ It's simple, with DittoCode you will be able to create a blocks that will be exe
 
 	end
 
+You can add multiple environments:
+
+	DittoCode::Exec.if 'PREMIUM,PRO' do
+
+		# Your premium and pro code!
+
+	end
+
 This blocks can be used in your .erb files like js or html:
 
     <% DittoCode::Exec.if 'PREMIUM' do %>
