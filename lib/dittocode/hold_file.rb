@@ -2,7 +2,7 @@ module DittoCode
 
 	@initialize = false
 
-	module Exec
+	module HoldFile
 		def if (environment)
 
 			# check the env code
@@ -10,10 +10,10 @@ module DittoCode
 				DittoCode::Environments.check_env
 			end
 
-			if environment.split(",").include? ENV["DITTOCODE_ENV"]
-				yield
+			unless environment.split(",").include? ENV["DITTOCODE_ENV"]
+				exit
 			end 
 		end
-
+		
 	end
 end

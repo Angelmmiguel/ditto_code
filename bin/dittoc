@@ -81,7 +81,7 @@ def iterateFolder(folder)
 end
 
 # ===============================================================
-# VARIAVLEs
+# VARIABLES
 # ===============================================================
 
 $isFolder = false;
@@ -147,8 +147,11 @@ end
 
 unless @stop
 
+	# Initiate the global var for the parser
+	ENV["DITTOCODE_ENV"] = $environment
+
 	# Initiate ditto
-	@ditto = DittoCode::Parse.new($environment, $override, $verbose, $indent)
+	@ditto = DittoCode::Parse.new($override, $verbose, $indent)
 
 	# Check if the user has introduce a folder/file
 	if $folder.empty?

@@ -7,11 +7,12 @@ module DittoCode
     require 'rainbow/ext/string'
 
     # Initialize the environment
-    def initialize(environment, override, verbose, indent)
-      @env = environment
+    def initialize(override, verbose, indent)
+      @env = ENV["DITTOCODE_ENV"]
       @override = override
       @verbose = verbose
       @indent = indent
+      @remove = false
     end
 
     # Transform the file based in the environment
@@ -43,17 +44,45 @@ module DittoCode
           if /[\s]*require[\s]*['|"](ditto_code)['|"]/.match(line).nil?
 
             if @isView
-              m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"][\s]+do[\s]*%>/.match(line)
+              # rem can stop the execution of this file
+              rem = /[\s]*<%[\s]*DittoCode::(?<action>Remove|Hold)File.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*%>/.match(line)
+              # m catch a block of dittoCode::Exec
+              m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]+do[\s]*%>/.match(line)
             else
-              m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z]+)['|"] do/.match(line)
+              rem = /[\s]*DittoCode::(?<action>Remove|Hold)File.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*/.match(line)
+              m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"] do/.match(line)
             end
 
-            if m 
+            if rem
+
+              # Remove the files and stop the execution of this script
+              if rem[:action] == 'Remove'
+                # Remove action
+                if DittoCode::Environments.isIncluded? rem[:environment]
+                  @removed = true
+                  break
+                end
+
+              else
+
+                # Hold action
+                unless DittoCode::Environments.isIncluded? rem[:environment]
+                  @removed = true
+                  break
+                end
+                
+              end
+
+              dittos += 1
+
+            elsif m 
+              # A block as been detected
               actions[:env] = m[:environment]
               actions[:atack] = true;
               actions[:ends] = 1;
             else
 
+              # Ditto is atacking?
               if !actions[:atack] 
                 if file.eof?
                   # Don't print a \n in the last line
@@ -77,6 +106,7 @@ module DittoCode
                     check_with_indent(out_file, line)
                   end
 
+                  # -1 end
                   actions[:ends] -= 1
 
                 else
@@ -96,15 +126,22 @@ module DittoCode
 
             end
 
+          else
+            # We delete the line require 'ditto_code'
+            dittos += 1
           end
 
         end
 
-        if @verbose || dittos != 0
-          say "[ "+"OK".color("64d67f")+" ] #{dittos} lines ditted on #{@dir_name}#{@file_name}!"
+        # Check if the file is removed
+        if @removed
+          say "[ "+"OK".color("64d67f")+" ] file #{@dir_name}#{@file_name} as been removed"
+        elsif @verbose || dittos != 0
+          say "[ "+"OK".color("64d67f")+" ] #{dittos} lines ditted on #{@dir_name}#{@file_name}"
         end
 
-        closeFile(out_file)
+        # Close and save the file
+        closeAndSaveFile(out_file)
       
       rescue => e
 
@@ -193,12 +230,30 @@ module DittoCode
       # file        => file to close
       # file_name   => name of the file
       # file_path   => path of the original file
-      def closeFile(file)
+      def closeAndSaveFile(file)
 
         # Close the file
         file.close;
 
-        if(@override)
+        # Check if we must to remove the file
+        if @removed 
+
+          # We need to remove
+          if @override
+
+            if @isView 
+              File.delete("#{@dir_name}#{@file_name}.erb")
+            else
+              File.delete("#{@dir_name}#{@file_name}.rb")
+            end
+
+            File.delete(file)
+          else
+            File.delete(file)
+          end
+
+        elsif @override
+          # No delete, but override?
           if @isView 
             File.delete("#{@dir_name}#{@file_name}.erb")
             File.rename(file, "#{@dir_name}#{@file_name}.erb")

@@ -2,7 +2,7 @@ module DittoCode
 
 	@initialize = false
 
-	module Exec
+	module RemoveFile
 		def if (environment)
 
 			# check the env code
@@ -11,7 +11,7 @@ module DittoCode
 			end
 
 			if environment.split(",").include? ENV["DITTOCODE_ENV"]
-				yield
+				exit
 			end 
 		end
 
