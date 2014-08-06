@@ -44,7 +44,7 @@ For ruby files:
 
     DittoCode::HoldFile.if 'PREMIUM'
 
-This code only hold the file in the PREMIUM release. In the other hand:
+This code only hold the file in the PREMIUM release. On the other hand:
 
     DittoCode::RemoveFile.if 'FREE,PRO'
     
@@ -53,7 +53,6 @@ This sentence will remove this file in FREE and PRO releases.
 The same methods are available in .erb:
 
     <% DittoCode::HoldFile.if 'PREMIUM' %>
-    
     <% DittoCode::RemoveFile.if 'FREE,PRO %>
 
 ### Production
