@@ -190,12 +190,12 @@ module DittoCode
 
         # Get the initializers and the ends of the blocks
         if @isView
-          initializers = line.scan(/<%[\s]*(case|unless|if|do|def)[\s]+/).size 
+          initializers = line.scan(/<%[\s]*(case|unless|if|do|def|begin)[\s]+/).size 
           initializers += line.scan(/<%[@=;\s\w\d]*(case|unless|if|do|def)[\s]+/).size
           
           finals = line.scan(/[\s]+(end)[\s]*%>/).size
         else
-          initializers = line.scan(/^[\s\t]*(case|unless|if|do|def)[\s]+/).size                     # If, def, unless... of a start line
+          initializers = line.scan(/^[\s\t]*(case|unless|if|do|def|begin)[\s]+/).size               # If, def, unless... of a start line
           initializers += line.scan(/[\s\t]+(case|do)[\s]+[|]+/).size                               # Case or do inside a line
           initializers += line.scan(/[\s\t]+(do)[\s]*$/).size                                       # Finals do
           initializers += line.scan(/[\s\t]+(if|unless)[\s]+[@=\d\w\s]+(?:then){1}/).size           # Only if|unless + then, this line disable error by: unless|if var
