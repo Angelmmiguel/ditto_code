@@ -18,6 +18,16 @@ DittoCode can execute your code based on a environment variable called: DITTOCOD
 
 ### Development
 
+#### Execute the file or start a server
+
+To execute a file based on a custom release use:
+
+	DITTOCODE_ENV=PREMIUM ruby my_file.rb
+
+If you are using a framework like rails:
+
+	DITTOCODE_ENV=PREMIUM rails s
+
 #### Switch a piece of code in a file
 
 It's simple, with DittoCode you will be able to create a blocks that will be executed only when the DITTOCODE_ENV coincide with the environment of the block:
