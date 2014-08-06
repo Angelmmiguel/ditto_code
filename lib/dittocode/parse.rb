@@ -139,7 +139,7 @@ module DittoCode
         if @removed
           say "[ "+"OK".color("64d67f")+" ] file #{@dir_name}#{@file_name} as been removed"
         elsif @verbose || dittos != 0
-          say "[ "+"OK".color("64d67f")+" ] #{dittos} lines ditted on #{@dir_name}#{@file_name}"
+          printf("Ditto say -> [ "+"OK".color("64d67f")+" ] %5s lines ditted on #{@dir_name}#{@file_name}\n", dittos)
         end
 
         # Close and save the file
