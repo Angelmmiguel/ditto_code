@@ -3,6 +3,8 @@ module DittoCode
 
     # Require
     require 'indentation'
+    require 'rainbow'
+    require 'rainbow/ext/string'
 
   	# Say hello ditto
     def self.hi
@@ -104,7 +106,7 @@ module DittoCode
         end
 
         if @verbose || dittos != 0
-          say "[Ok] #{dittos} lines ditted on #{@dir_name}#{@file_name}!"
+          say "#{dittos} lines ditted on #{@dir_name}#{@file_name}!                     [ "+"OK".color("64d67f")+" ]"
         end
 
         closeFile(out_file)
@@ -112,9 +114,9 @@ module DittoCode
       rescue => e
 
         if e.class == Errno::EISDIR
-          say "[Err] If you wants to use a directory use the option -f"
+          say "[Err] If you wants to use a directory use the option -f                 [ "+"ERR".color("ed5757")+" ]"
         else 
-          say "[Err] Oh no! I have an error :("  
+          say "[Err] Oh no! I have an error :(                                         [ "+"ERR".color("ed5757")+" ]"  
         end
 
         if @verbose
