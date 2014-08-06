@@ -12,11 +12,13 @@ module DittoCode
       @override = override
       @verbose = verbose
       @indent = indent
-      @remove = false
     end
 
     # Transform the file based in the environment
     def transformation(file_path, isView)
+
+      # Init removed false
+      @removed = false
 
       # Start to read the file
       file = File.open(file_path)
