@@ -129,7 +129,6 @@ module DittoCode
             end
 
           else
-            # We delete the line require 'ditto_code'
             dittos += 1
           end
 
