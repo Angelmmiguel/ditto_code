@@ -54,6 +54,12 @@ This blocks can be used in your .erb files like js or html:
 
 	<% end %>
 
+#### Inline conditionals
+
+The method to use inline conditional is *Exec.is*. For example, if you wants to execute the method *call_to_method* if the release is 'PRO':
+
+	call_to_method if DittoCode::Exec.is 'PRO'
+
 #### Switch an entirely file
 
 You can have a file that you don't want copy in some releases. For example, if you have a *premium.js*, this file mustn't appear in free release. To solve this situation, you have two methods.
@@ -71,7 +77,7 @@ This sentence will remove this file in FREE and PRO releases.
 The same methods are available in .erb:
 
     <% DittoCode::HoldFile.if 'PREMIUM' %>
-    <% DittoCode::RemoveFile.if 'FREE,PRO %>
+    <% DittoCode::RemoveFile.if 'FREE,PRO' %>
 
 ### Production
 
@@ -81,7 +87,7 @@ Those blocks are for development. When you turn to production, you can call to D
 
 **dittoc** is a parser will rewrite your code and create a new file called my_file_PREMIUM.rb (in this example) that hold the code inside the "PREMIUM" blocks, and delete the code inside another blocks.
 
-If you want to rewrite the file use -o option:
+If you want to override the file use -o option:
 
 	dittoc -o PREMIUM my_file.rb
 	
@@ -99,7 +105,7 @@ By default, dittoc ignore the .erb files. If you need to parse it use the option
     
 ## Contributions
 
-Feels free to open a ticket or a pull request. You can connect with me at: [@Laux_es](https://twitter.com/Laux_es "Laux_es")
+Feels free to open a ticket or a pull request. You can connect with me at: [@Laux_es](https://twitter.com/Laux_es "Laux_es") ;)
 
 ## License 
 
