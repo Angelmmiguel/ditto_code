@@ -50,7 +50,7 @@ module DittoCode
               # rem can stop the execution of this file
               rem = /[\s]*<%[\s]*DittoCode::(?<action>Remove|Hold)File.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*%>/.match(line)
               # is catch a block of DittoCode::Exec.is (Inline conditionals)
-              is =  /[\s]*(?<action>if|unless)[\s]+DittoCode::Exec.is[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*/
+              is =  /[\s]*(?<action>if|unless)[\s]+DittoCode::Exec.is[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*/.match(line)
               # m catch a block of dittoCode::Exec.if (Block conditionals)
               m =   /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]+do[\s]*%>/.match(line)
             else
@@ -151,7 +151,7 @@ module DittoCode
 
         # Check if the file is removed
         if @removed
-          say "[ "+"OK".color("64d67f")+" ] file #{@dir_name}#{@file_name} as been removed"
+          say "[ "+"OK".color("64d67f")+" ] file #{@dir_name}#{@file_name} has been removed"
         elsif @verbose || dittos != 0
           printf("Ditto say -> [ "+"OK".color("64d67f")+" ] %5s lines ditted on #{@dir_name}#{@file_name}\n", dittos)
         end

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'ditto_code'
-  s.version     = '0.2.2'
+  s.version     = '0.2.3'
   s.date        = '2014-08-18'
   s.executables << 'dittoc'
   s.summary     = "ditto"
