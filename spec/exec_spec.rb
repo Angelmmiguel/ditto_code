@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "DittoCode::Exec" do 
+describe "DittoCode::Exec blocks and inline conditionals" do 
 
 	# Test to check execution of code with 1 environment
 	describe 'exec a block based on one environment (PRO)' do
@@ -41,8 +41,8 @@ describe "DittoCode::Exec" do
 			ENV["DITTOCODE_ENV"] = "FREE"
 			result_free = Code.pro_and_free_environment
 
-			expect(result_pro).to eq("I'm free and pro")
-			expect(result_free).to eq("I'm free and pro")
+			expect(result_pro).to eq("I'm free or pro")
+			expect(result_free).to eq("I'm free or pro")
 
 		end
 
@@ -79,7 +79,7 @@ describe "DittoCode::Exec" do
 
 			result = Code.conditional_pro_environment
 
-			expect(result).to eq(nil)
+			expect(result).to eq("I'm not pro")
 
 		end
 
@@ -97,8 +97,12 @@ describe "DittoCode::Exec" do
 			ENV["DITTOCODE_ENV"] = "FREE"
 			result_free = Code.conditional_pro_and_free_environment
 
-			expect(result_pro).to eq("I'm free and pro")
-			expect(result_free).to eq("I'm free and pro")
+			ENV["DITTOCODE_ENV"] = "FREE,PRO"
+			result_free_or_pro = Code.conditional_pro_and_free_environment
+
+			expect(result_pro).to eq("I'm free or pro")
+			expect(result_free).to eq("I'm free or pro")
+			expect(result_free_or_pro).to eq("I'm free or pro")
 
 		end
 

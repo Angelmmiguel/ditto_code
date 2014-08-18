@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ditto_code (0.2.0)
+    ditto_code (0.2.1)
       indentation (= 0.1.1)
       rainbow (= 2.0.0)
 

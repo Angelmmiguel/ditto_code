@@ -21,7 +21,7 @@ module DittoCode
       @removed = false
 
       # Start to read the file
-      file = File.open(file_path)
+      file = File.open(file_path, "r")
       if isView 
         @file_name = File.basename(file_path, ".erb") 
       else
@@ -29,6 +29,7 @@ module DittoCode
       end
       @dir_name = File.dirname(file_path) + "/"
       @isView = isView
+      @first_line = true
 
       # Generate the new archive
       out_file = initiateFile(file_path)
@@ -48,13 +49,17 @@ module DittoCode
             if @isView
               # rem can stop the execution of this file
               rem = /[\s]*<%[\s]*DittoCode::(?<action>Remove|Hold)File.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*%>/.match(line)
-              # m catch a block of dittoCode::Exec
-              m = /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]+do[\s]*%>/.match(line)
+              # is catch a block of DittoCode::Exec.is (Inline conditionals)
+              is =  /[\s]*(?<action>if|unless)[\s]+DittoCode::Exec.is[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*/
+              # m catch a block of dittoCode::Exec.if (Block conditionals)
+              m =   /[\s]*<%[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]+do[\s]*%>/.match(line)
             else
               rem = /[\s]*DittoCode::(?<action>Remove|Hold)File.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*/.match(line)
-              m = /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"] do/.match(line)
+              is =  /[\s]*(?<action>if|unless)[\s]+DittoCode::Exec.is[\s]+['|"](?<environment>[a-zA-Z,]+)['|"]/.match(line)
+              m =   /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"] do/.match(line)
             end
 
+            # Remove files
             if rem
 
               # Remove the files and stop the execution of this script
@@ -77,6 +82,22 @@ module DittoCode
 
               dittos += 1
 
+            # Inline conditionals
+            elsif is 
+
+              # Check the action (unless or if)
+              if (is[:action] == 'unless' && !DittoCode::Environments.isIncluded?(is[:environment])) || (is[:action] == 'if' && DittoCode::Environments.isIncluded?(is[:environment]))
+                # We must hold the line
+
+                # Delete the inline conditional from the line
+                line.slice! is[0]
+
+                # Write on the file
+                check_with_indent(out_file, line)
+
+              end
+
+            # Block conditionals
             elsif m 
               # A block as been detected
               actions[:env] = m[:environment]
@@ -86,13 +107,7 @@ module DittoCode
 
               # Ditto is atacking?
               if !actions[:atack] 
-                if file.eof?
-                  # Don't print a \n in the last line
-                  out_file.print(line)
-                else  
-                  out_file.puts(line)
-                end
-
+                check_with_indent(out_file, line)
               else 
                 # He is transforming
                 dittos += 1
@@ -164,10 +179,27 @@ module DittoCode
       # Send the line into the file. If indent is true
       # The line will be indented
       def check_with_indent(out_file, line)
-        if @indent
-          out_file.puts(line.indent(-1))
+
+        line.chomp!
+
+        if @first_line
+
+          if @indent
+            out_file.print("#{line.indent(-1)}")
+          else
+            out_file.print("#{line}")
+          end
+
+          @first_line = false
+
         else
-          out_file.puts(line)
+
+          if @indent
+            out_file.print("\n#{line.indent(-1)}")
+          else
+            out_file.print("\n#{line}")
+          end
+
         end
       end 
 
@@ -234,7 +266,7 @@ module DittoCode
       def closeAndSaveFile(file)
 
         # Close the file
-        file.close;
+        file.close
 
         # Check if we must to remove the file
         if @removed 

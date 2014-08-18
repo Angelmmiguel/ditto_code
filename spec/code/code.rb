@@ -11,19 +11,25 @@ module Code
 	def self.pro_and_free_environment
 
 		DittoCode::Exec.if 'PRO,FREE' do
-			"I'm free and pro"
+			"I'm free or pro"
 		end
 	end
 
 	def self.conditional_pro_environment
 
-		"I'm pro" if DittoCode::Exec.is 'PRO'
+		output = ""
+
+		output += "I'm pro" if DittoCode::Exec.is 'PRO'
+		output += "I'm not pro" unless DittoCode::Exec.is 'PRO'
+
+		# return
+		output
 
 	end
 
 	def self.conditional_pro_and_free_environment
 
-		"I'm free and pro" if DittoCode::Exec.is 'PRO,FREE'
+		"I'm free or pro" if DittoCode::Exec.is 'PRO,FREE'
 	end
 
 end
