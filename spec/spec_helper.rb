@@ -1,5 +1,5 @@
 require 'pry'
-include DittoCode::Exec
+require 'ditto_code'
 
 Dir["spec/code/*.rb"].each {|file| require "./#{file}" }
 
