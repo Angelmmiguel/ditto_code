@@ -27,8 +27,8 @@ describe "dittoc" do
 			`dittoc PRO spec/code_parser/inline_conditionals.rb`
 
 			# Compare the outputs
-			result = `ruby spec/code_parser/inline_conditionals_PRO.rb`
-			output = `ruby spec/code_parser/inline_conditionals.rb`
+			result = `bundle exec ruby spec/code_parser/inline_conditionals_PRO.rb`
+			output = `bundle exec ruby spec/code_parser/inline_conditionals.rb`
 
 			# Delete the file
 			FileUtils.rm('spec/code_parser/inline_conditionals_PRO.rb')
@@ -51,8 +51,8 @@ describe "dittoc" do
 			`dittoc PRO,PREMIUM spec/code_parser/inline_conditionals.rb`
 
 			# Compare the outputs
-			result = `ruby spec/code_parser/inline_conditionals_PRO,PREMIUM.rb`
-			output = `ruby spec/code_parser/inline_conditionals.rb`
+			result = `bundle exec ruby spec/code_parser/inline_conditionals_PRO,PREMIUM.rb`
+			output = `bundle exec ruby spec/code_parser/inline_conditionals.rb`
 
 			# Delete the file
 			FileUtils.rm('spec/code_parser/inline_conditionals_PRO,PREMIUM.rb')
