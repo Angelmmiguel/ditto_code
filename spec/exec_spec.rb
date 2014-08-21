@@ -121,7 +121,7 @@ describe "DittoCode::Exec blocks and inline conditionals" do
 	# A fail test to check TeamCity
 	describe 'Exec a fail test to check TeamCity CI' do
 
-		if 'The gem must fail this' do
+		it 'The gem must fail this' do
 
 			# Initiathe the env
 			ENV["DITTOCODE_ENV"] = "PRO"
