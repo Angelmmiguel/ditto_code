@@ -118,19 +118,4 @@ describe "DittoCode::Exec blocks and inline conditionals" do
 
 	end
 
-	# A fail test to check TeamCity
-	describe 'Exec a fail test to check TeamCity CI' do
-
-		it 'The gem must fail this' do
-
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PRO"
-			result_pro = Code.conditional_pro_and_free_environment
-
-			expect(result_pro).to eq(nil)
-
-		end
-
-	end
-
 end
