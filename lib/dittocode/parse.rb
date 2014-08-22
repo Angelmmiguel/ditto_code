@@ -57,6 +57,7 @@ module DittoCode
               rem = /[\s]*DittoCode::(?<action>Remove|Hold)File.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"][\s]*/.match(line)
               is =  /[\s]*(?<action>if|unless)[\s]+DittoCode::Exec.is[\s]+['|"](?<environment>[a-zA-Z,]+)['|"]/.match(line)
               m =   /[\s]*DittoCode::Exec.if[\s]+['|"](?<environment>[a-zA-Z,]+)['|"] do/.match(line)
+              commented = /^[\s]*#/.match(line)
             end
 
             # Remove files
@@ -97,6 +98,14 @@ module DittoCode
 
               end
 
+            # Commented  
+            elsif !@isView && commented
+
+              if !actions[:atack] || DittoCode::Environments.isIncluded?(actions[:env])
+                # Write on the file
+                check_with_indent(out_file, line)
+              end
+
             # Block conditionals
             elsif m 
               # A block as been detected
@@ -118,7 +127,7 @@ module DittoCode
                   # If is the last end, it's coincide with the end of the block
                   if actions[:ends] == 1
                     actions[:atack] = false
-                  elsif actions[:env] == @env
+                  elsif DittoCode::Environments.isIncluded?(actions[:env])
                     # Only how if we must mantain it
                     check_with_indent(out_file, line)
                   end
@@ -129,7 +138,7 @@ module DittoCode
                 else
 
                   # prints of coincide with the environment
-                  if actions[:env] == @env
+                  if DittoCode::Environments.isIncluded?(actions[:env])
                     check_with_indent(out_file, line)
                   end
 

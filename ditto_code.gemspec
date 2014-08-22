@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'ditto_code'
-  s.version     = '0.2.3'
-  s.date        = '2014-08-18'
+  s.version     = '0.2.5'
+  s.date        = '2014-08-22'
   s.executables << 'dittoc'
   s.summary     = "ditto"
   s.description = "Transform your ruby code based on a custom variable."

@@ -13,12 +13,18 @@ module DittoCode
 		# True if the environment is included
 		def isIncluded? (environment)
 
-			ENV["DITTOCODE_ENV"].split(',').each do |env|
-				if environment.split(",").include? env
-					return true
-				else
-					return false
+			if ENV["DITTOCODE_ENV"]
+
+				ENV["DITTOCODE_ENV"].split(',').each do |env|
+					if environment.split(",").include? env
+						return true
+					else
+						return false
+					end
 				end
+			else
+				# Undefined environment, always true
+				return true
 			end
 		end
 	end

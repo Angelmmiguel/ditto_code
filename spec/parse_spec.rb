@@ -3,14 +3,47 @@ require 'spec_helper'
 describe "dittoc" do 
 
 	# Test to check execution of code with 1 environment
-	describe 'Parse a file with inline conditionals and one environment (PRO)' do
+	describe 'Parse a file with blocks and one environment (PRO)' do
 
+		it 'The outputs must coincide' do
 
+			# Initiathe the env
+			ENV["DITTOCODE_ENV"] = "PRO"
+
+			# Parse the file
+			`dittoc PRO spec/code_parser/block_conditionals.rb`
+
+			# Compare the outputs
+			result = `DITTOCODE_ENV=PRO bundle exec ruby spec/code_parser/block_conditionals_PRO.rb`
+			output = `DITTOCODE_ENV=PRO bundle exec ruby spec/code_parser/block_conditionals.rb`
+
+			# Delete the file
+			FileUtils.rm('spec/code_parser/block_conditionals_PRO.rb')
+
+			expect(result).to eq(output)
+
+		end
 
 	end
 
 	# Multiple environments
 	describe 'exec a block based on two environments (PRO,PREMIUM)' do
+
+		it 'The outputs must coincide' do
+
+			# Parse the file
+			`dittoc PRO,PREMIUM spec/code_parser/block_conditionals.rb`
+
+			# Compare the outputs
+			result = `DITTOCODE_ENV=PRO,PREMIUM bundle exec ruby spec/code_parser/block_conditionals_PRO,PREMIUM.rb`
+			output = `DITTOCODE_ENV=PRO,PREMIUM bundle exec ruby spec/code_parser/block_conditionals.rb`
+
+			# Delete the file
+			FileUtils.rm('spec/code_parser/block_conditionals_PRO,PREMIUM.rb')
+
+			expect(result).to eq(output)
+
+		end
 
 
 	end
