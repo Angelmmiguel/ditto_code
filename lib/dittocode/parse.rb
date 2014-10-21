@@ -238,6 +238,7 @@ module DittoCode
           finals = line.scan(/[\s]+(end)[\s]*%>/).size
         else
           initializers = line.scan(/^[\s\t]*(case|unless|if|def|do)[\s]+/).size
+          initializers += line.scan(/ =[\s\t]*(case|unless|if)[\s]+/).size
           initializers += line.scan(/^[\s\t]*(begin)[\s]*/).size               # If, def, unless... of a start line
           initializers += line.scan(/[\s\t]+(case|do)[\s]+[|]+/).size                               # Case or do inside a line
           initializers += line.scan(/[\s\t]+(do)[\s]*$/).size                                       # Finals do
