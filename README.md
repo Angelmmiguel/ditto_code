@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/ditto_code.svg)](http://badge.fury.io/rb/ditto_code)
+
 # DittoCode
 
 ![DittoCode](https://raw.githubusercontent.com/Angelmmiguel/ditto_code/master/ditto.png "DittoCode")
