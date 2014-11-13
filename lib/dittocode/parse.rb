@@ -218,7 +218,7 @@ module DittoCode
       def isEnd?(line)
 
         # Coincide with an end!
-        if @isView && /[\s]+(end)[\s]*%>/.match(line)
+        if @isView && /[\s]*<%[\s]*(end)[\s]*%>/.match(line)
           true
         elsif /^[\s]*end/.match(line)
           true
