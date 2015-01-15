@@ -100,7 +100,7 @@ module DittoCode
 
               end
 
-            # Commented  
+            # Commented
             elsif !@isView && commented
 
               if !actions[:atack] || DittoCode::Environments.isIncluded?(actions[:env])
@@ -219,8 +219,14 @@ module DittoCode
 
         # Coincide with an end!
         if @isView && /[\s]*<%[\s]*(end)[\s]*%>/.match(line)
+          if @verbose
+            puts "End | Line: #{line}"
+          end
           true
-        elsif /^[\s]*end[\s]*$/.match(line)
+        elsif /^[\s]*end[\.\w]*[\s]*$/.match(line)
+          if @verbose
+            puts "End | Line: #{line}"
+          end
           true
         else
           false 
@@ -246,6 +252,14 @@ module DittoCode
           initializers += line.scan(/[\s\t]+(if|unless)[\s]+[@=;\d\w\s\.\:]+(?:then){1}/).size           # Only if|unless + then, this line disable error by: unless|if var
 
           finals = line.scan(/[\s\t]*(end)[\s]*$/).size
+        end
+
+        if @verbose
+
+          if initializers + finals != 0
+            puts "Initializers: #{initializers} | Finals: #{finals} | Line: #{line}"
+          end
+
         end
 
         # Return the difference
