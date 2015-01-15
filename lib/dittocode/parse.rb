@@ -220,7 +220,7 @@ module DittoCode
         # Coincide with an end!
         if @isView && /[\s]*<%[\s]*(end)[\s]*%>/.match(line)
           true
-        elsif /^[\s]*end/.match(line)
+        elsif /^[\s]*end[\s]*$/.match(line)
           true
         else
           false 
