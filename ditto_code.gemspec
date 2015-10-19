@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/Angelmmiguel/ditto_code'
   s.license       = 'MIT'
-  s.add_runtime_dependency "indentation", ["= 0.1.1"]
-  s.add_runtime_dependency "rainbow", ["= 2.0.0"] 
+  s.add_dependency "indentation", ["= 0.1.1"]
+  s.add_dependency "rainbow", ["= 2.0.0"] 
 
   # Test dependencies
   s.add_development_dependency "bundler"
