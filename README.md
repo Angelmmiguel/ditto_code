@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/ditto_code.svg)](http://badge.fury.io/rb/ditto_code)
+[![Gem Version](https://badge.fury.io/rb/ditto_code.svg)](http://badge.fury.io/rb/ditto_code) [![Build Status](https://travis-ci.org/Angelmmiguel/ditto_code.svg?branch=master)](https://travis-ci.org/Angelmmiguel/ditto_code)
 
 # DittoCode
 
