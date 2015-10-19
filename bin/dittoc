@@ -15,7 +15,7 @@ end
 
 def show_help
 
-	$stdout.puts("[Usage] #{File.basename($0)}: [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] [--allow-views <search in views>] [-i <indent>] ENVIRONMENT file|folder")
+	$stdout.puts("[Usage] dittoc [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] [--allow-views <search in views>] [-i <indent>] ENVIRONMENT file|folder")
 
 end
 
