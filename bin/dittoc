@@ -13,14 +13,13 @@ def usage(s)
     exit(1)
 end
 
-def showhelp
+def show_help
 
-	$stdout.puts("Usage: [options] ENVIRONMENT file|folder")
-	$stdout.puts("DittoCode")
+	$stdout.puts("[Usage] #{File.basename($0)}: [-v <verbose>] [-f <folder>] [-r <recursive>] [-o <override files>] [--allow-views <search in views>] [-i <indent>] ENVIRONMENT file|folder")
 
 end
 
-def showHi
+def show_hi
 
 	$stdout.puts "Ditto say -> Hey man! What's up?".color("ee82ee")
 	$stdout.puts("")
@@ -120,11 +119,11 @@ while ARGV[0]
 	    	@allow_views = true
 	    when '--help' 
 	    when '-h'
-	    	showHelp
+	    	show_help
 	    	@stop = true
 	    	ARGV.shift	
 	    when '-hi'
-	    	showHi
+	    	show_hi
 	    	@stop = true
 	    	ARGV.shift
 	    when /^-/ 
