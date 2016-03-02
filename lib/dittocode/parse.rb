@@ -24,8 +24,8 @@ module DittoCode
 
       # Start to read the file
       file = File.open(file_path, "r")
-      if isView 
-        @file_name = File.basename(file_path, ".erb") 
+      if isView
+        @file_name = File.basename(file_path, ".erb")
       else
         @file_name = File.basename(file_path, ".rb")
       end
@@ -80,13 +80,13 @@ module DittoCode
                   @removed = true
                   break
                 end
-                
+
               end
 
               dittos += 1
 
             # Inline conditionals
-            elsif is 
+            elsif is
 
               # Check the action (unless or if)
               if (is[:action] == 'unless' && !DittoCode::Environments.isIncluded?(is[:environment])) || (is[:action] == 'if' && DittoCode::Environments.isIncluded?(is[:environment]))
@@ -109,7 +109,7 @@ module DittoCode
               end
 
             # Block conditionals
-            elsif m 
+            elsif m
               # A block as been detected
               actions[:env] = m[:environment]
               actions[:atack] = true;
@@ -117,9 +117,9 @@ module DittoCode
             else
 
               # Ditto is atacking?
-              if !actions[:atack] 
+              if !actions[:atack]
                 check_with_indent(out_file, line)
-              else 
+              else
                 # He is transforming
                 dittos += 1
 
@@ -169,20 +169,20 @@ module DittoCode
 
         # Close and save the file
         closeAndSaveFile(out_file)
-      
+
       rescue => e
 
         if e.class == Errno::EISDIR
           say "[ "+"ERR".color("ed5757")+" ] If you wants to use a directory use the option -f"
-        else 
-          say "[ "+"ERR".color("ed5757")+" ] Oh no! I have an error :("  
+        else
+          say "[ "+"ERR".color("ed5757")+" ] Oh no! I have an error :("
         end
 
         if @verbose
           say e
         end
 
-      end 
+      end
     end
 
     private
@@ -212,7 +212,7 @@ module DittoCode
           end
 
         end
-      end 
+      end
 
       # Detect an end line
       def isEnd?(line)
@@ -229,7 +229,7 @@ module DittoCode
           end
           true
         else
-          false 
+          false
         end
       end
 
@@ -238,10 +238,10 @@ module DittoCode
 
         # Get the initializers and the ends of the blocks
         if @isView
-          initializers = line.scan(/<%[=\s]*(case|unless|if|do|begin)[\s]+/).size 
-          initializers += line.scan(/<%[@=;\s\w\d\.\:]{3,}[\s]+(case|do)[\s]+/).size
+          initializers = line.scan(/<%[=\s]*(case|unless|if|do|begin)[\s]+/).size
+          initializers += line.scan(/<%[@()=>\-'#";\s\w\d\.\:,]{3,}[\s]+(case|do)[\s]+/).size
           initializers += line.scan(/<%[@=;\d\w\s\.\:]{3,}(if|unless)[\s]+[@=;\d\w\s\.\:]+(?:then){1}/).size
-          
+
           finals = line.scan(/[\s]+(end)[\s]*%>/).size
         else
           initializers = line.scan(/^[\s\t]*(case|unless|if|def|do)[\s]+/).size
@@ -271,13 +271,13 @@ module DittoCode
       def initiateFile(file_path)
 
         if(@override)
-          if @isView 
+          if @isView
             File.new("#{@dir_name}#{@file_name}_tmp.erb", "w")
           else
             File.new("#{@dir_name}#{@file_name}_tmp.rb", "w")
           end
         else
-          if @isView 
+          if @isView
             File.new("#{@dir_name}#{@file_name}_#{@env}.erb", "w")
           else
             File.new("#{@dir_name}#{@file_name}_#{@env}.rb", "w")
@@ -297,12 +297,12 @@ module DittoCode
         file.close
 
         # Check if we must to remove the file
-        if @removed 
+        if @removed
 
           # We need to remove
           if @override
 
-            if @isView 
+            if @isView
               File.delete("#{@dir_name}#{@file_name}.erb")
             else
               File.delete("#{@dir_name}#{@file_name}.rb")
@@ -315,7 +315,7 @@ module DittoCode
 
         elsif @override
           # No delete, but override?
-          if @isView 
+          if @isView
             File.delete("#{@dir_name}#{@file_name}.erb")
             File.rename(file, "#{@dir_name}#{@file_name}.erb")
           else
