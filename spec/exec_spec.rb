@@ -1,121 +1,99 @@
 require 'spec_helper'
 
-describe "DittoCode::Exec blocks and inline conditionals" do 
+describe "DittoCode::Exec blocks and inline conditionals" do
 
-	# Test to check execution of code with 1 environment
-	describe 'exec a block based on one environment (PRO)' do
+  # Test to check execution of code with 1 environment
+  describe 'exec a block based on one environment (PRO)' do
 
-		it 'The gem must exec this code' do
+    it 'The gem must exec this code' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "PRO"
+      result = Code.pro_environment
+      expect(result).to eq("I'm pro")
+    end
 
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PRO"
+    it 'The gem musn\'t exec this code' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "FREE"
+      result = Code.pro_environment
+      expect(result).to eq(nil)
+    end
 
-			result = Code.pro_environment
+  end
 
-			expect(result).to eq("I'm pro")
+  # Multiple environments
+  describe 'exec a block based on two environments (PRO,PREMIUM)' do
 
-		end
+    it 'The gem must exec this code' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "PRO"
+      result_pro = Code.pro_and_free_environment
 
-		it 'The gem musn\'t exec this code' do
+      ENV["DITTOCODE_ENV"] = "FREE"
+      result_free = Code.pro_and_free_environment
 
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "FREE"
+      expect(result_pro).to eq("I'm free or pro")
+      expect(result_free).to eq("I'm free or pro")
+    end
 
-			result = Code.pro_environment
+    it 'The gem musn\'t exec this code' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "PREMIUM"
+      result = Code.pro_and_free_environment
 
-			expect(result).to eq(nil)
+      expect(result).to eq(nil)
+    end
 
-		end
+  end
 
-	end
+  # Inline conditional
+  describe 'exec a line based on one environment (PRO)' do
 
-	# Multiple environments
-	describe 'exec a block based on two environments (PRO,PREMIUM)' do
+    it 'The gem must exec this line' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "PRO"
+      result = Code.conditional_pro_environment
 
-		it 'The gem must exec this code' do
+      expect(result).to eq("I'm pro")
+    end
 
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PRO"
-			result_pro = Code.pro_and_free_environment
+    it 'The gem musn\'t exec this line' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "FREE"
+      result = Code.conditional_pro_environment
 
-			ENV["DITTOCODE_ENV"] = "FREE"
-			result_free = Code.pro_and_free_environment
+      expect(result).to eq("I'm not pro")
+    end
 
-			expect(result_pro).to eq("I'm free or pro")
-			expect(result_free).to eq("I'm free or pro")
+  end
 
-		end
+  # Multiple environments
+  describe 'exec a line based on two environments (PRO,PREMIUM)' do
 
-		it 'The gem musn\'t exec this code' do
+    it 'The gem must exec this line' do
+      # Initiathe the env
+      ENV["DITTOCODE_ENV"] = "PRO"
+      result_pro = Code.conditional_pro_and_free_environment
 
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PREMIUM"
-			result = Code.pro_and_free_environment
+      ENV["DITTOCODE_ENV"] = "FREE"
+      result_free = Code.conditional_pro_and_free_environment
 
-			expect(result).to eq(nil)
+      ENV["DITTOCODE_ENV"] = "FREE,PRO"
+      result_free_or_pro = Code.conditional_pro_and_free_environment
 
-		end
+      expect(result_pro).to eq("I'm free or pro")
+      expect(result_free).to eq("I'm free or pro")
+      expect(result_free_or_pro).to eq("I'm free or pro")
+    end
 
-	end
+    it 'The gem musn\'t exec this line' do
+      # Initiate the env
+      ENV["DITTOCODE_ENV"] = "PREMIUM"
+      result = Code.conditional_pro_and_free_environment
 
-	# Inline conditional
-	describe 'exec a line based on one environment (PRO)' do
+      expect(result).to eq(nil)
+    end
 
-		it 'The gem must exec this line' do
-
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PRO"
-
-			result = Code.conditional_pro_environment
-
-			expect(result).to eq("I'm pro")
-
-		end
-
-		it 'The gem musn\'t exec this line' do
-
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "FREE"
-
-			result = Code.conditional_pro_environment
-
-			expect(result).to eq("I'm not pro")
-
-		end
-
-	end
-
-	# Multiple environments
-	describe 'exec a line based on two environments (PRO,PREMIUM)' do
-
-		it 'The gem must exec this line' do
-
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PRO"
-			result_pro = Code.conditional_pro_and_free_environment
-
-			ENV["DITTOCODE_ENV"] = "FREE"
-			result_free = Code.conditional_pro_and_free_environment
-
-			ENV["DITTOCODE_ENV"] = "FREE,PRO"
-			result_free_or_pro = Code.conditional_pro_and_free_environment
-
-			expect(result_pro).to eq("I'm free or pro")
-			expect(result_free).to eq("I'm free or pro")
-			expect(result_free_or_pro).to eq("I'm free or pro")
-
-		end
-
-		it 'The gem musn\'t exec this line' do
-
-			# Initiathe the env
-			ENV["DITTOCODE_ENV"] = "PREMIUM"
-			result = Code.conditional_pro_and_free_environment
-
-			expect(result).to eq(nil)
-
-		end
-
-	end
+  end
 
 end
